@@ -40,3 +40,7 @@ jobs:
         run: npm audit --audit-level=moderate
       - name: Build
         run: npm run build
+      - name: Verify production CSP
+        run: grep -q 'Content-Security-Policy' dist/index.html
+      - name: Verify no deployment workflow
+        run: test ! -f .github/workflows/deploy.yml
