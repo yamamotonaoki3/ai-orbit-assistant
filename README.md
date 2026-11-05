@@ -21,14 +21,14 @@ React + TypeScript + Vite + React Three Fiber を使った **無料で実行で�
 
 ## ローカルで動かす
 
-Node.js 22以上を推奨。開発・公開にはAPIキーやクラウドDBは不要です。
+**Node.js 24.22.2以上（24系LTS）** を使用してください。Node.jsはセキュリティ更新に合わせて最新版の24.xへ更新します。クラウドDBやAPIキーは不要です。
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-画面の案内に表示される `http://localhost:5173` を開きます（ポートが使用中の場合はViteの表示するURLを開いてください）。
+ローカル環境で表示される `http://127.0.0.1:5173` を開きます（ポートが使用中の場合はViteの表示するURLを開いてください）。
 
 ```bash
 npm run build
@@ -45,17 +45,20 @@ npm run preview
 
 **この試作品のGitHub Pages公開は停止しています。** 自動デプロイ用の `.github/workflows/deploy.yml` も削除済みです。コード変更やセキュリティチェックによってWebサイトが再公開されないようにしています。再公開する場合は、明示的な承認のもと、公開設定とデプロイ構成を改めて見直してください。
 
-- `.github/workflows/security.yml`: `main` へのpush／プルリクエスト等で、依存パッケージ監査とビルドを実行（**デプロイしない**）。
+- `.github/workflows/security.yml`: `main` へのpush・プルリクエスト・毎週月曜日の定期検査で、依存パッケージ監査とビルドを実行（**デプロイしない**）。
 - `.github/dependabot.yml`: npmパッケージとGitHub Actionsの更新確認を毎週実行。
 - GitHub Actionsの権限は `contents: read` を指定し、外部ActionsをコミットSHAで参照。
 - デモの「2段階認証」は本物の認証ではありません。名前・自己紹介はブラウザの `localStorage` に保存されるため、機密情報を入力しないでください。
-- `package-lock.json` は未追加です。ローカル環境で `npm install` を実行して生成し、監査・検証後にコミットしたら、セキュリティワークフローの依存インストールを `npm ci` に切り替えてください。
+- `package-lock.json` をバージョン固定ファイルとしてコミット済み。CI・ローカルともに `npm ci` で再現性のあるインストールを行います。
+- Vite開発サーバーとプレビューは`127.0.0.1`にのみバインドし、LANからの意図しないアクセスを防ぎます。
+- GitHub Actionsには最小権限（`contents: read`）とコミットSHA固定を適用。認証情報はcheckout後に残しません。
+- Node.jsの次回セキュリティ更新が2026-11-11頃に予告されています。公開後はNode.js 24.xを更新し、CIとローカル環境で監査を再実行してください。
 
 ローカルでの監査とビルドは次のコマンドで実行できます。
 
 ```bash
-npm install
-npm audit --audit-level=high
+npm ci
+npm audit --audit-level=moderate
 npm run build
 ```
 
