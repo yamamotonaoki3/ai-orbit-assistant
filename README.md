@@ -41,13 +41,23 @@ npm run preview
 
 本リポジトリは画面の動きを確認するためのMVPです。ルーティング先やログイン画面、実際の通知配信・2段階認証はまだ実装していません。
 
-## GitHub Pagesで公開する
+## 公開状態とセキュリティ（2026-11-05）
 
-リポジトリの `Settings > Pages > Build and deployment > Source` を **GitHub Actions** に設定します。
+**この試作品のGitHub Pages公開は停止しています。** 自動デプロイ用の `.github/workflows/deploy.yml` も削除済みです。コード変更やセキュリティチェックによってWebサイトが再公開されないようにしています。再公開する場合は、明示的な承認のもと、公開設定とデプロイ構成を改めて見直してください。
 
-`.github/workflows/deploy.yml` にViteのビルドとGitHub Pagesへのデプロイを用意しています。`main` へのpush後、`Actions` の処理が完了すれば `https://yamamotonaoki3.github.io/ai-orbit-assistant/` で表示できます。
+- `.github/workflows/security.yml`: `main` へのpush／プルリクエスト等で、依存パッケージ監査とビルドを実行（**デプロイしない**）。
+- `.github/dependabot.yml`: npmパッケージとGitHub Actionsの更新確認を毎週実行。
+- GitHub Actionsの権限は `contents: read` を指定し、外部ActionsをコミットSHAで参照。
+- デモの「2段階認証」は本物の認証ではありません。名前・自己紹介はブラウザの `localStorage` に保存されるため、機密情報を入力しないでください。
+- `package-lock.json` は未追加です。ローカル環境で `npm install` を実行して生成し、監査・検証後にコミットしたら、セキュリティワークフローの依存インストールを `npm ci` に切り替えてください。
 
-このサンプルのVite設定は `base: './'` で、GitHub Pagesのサブパスにも対応しています。
+ローカルでの監査とビルドは次のコマンドで実行できます。
+
+```bash
+npm install
+npm audit --audit-level=high
+npm run build
+```
 
 ## アーキテクチャ
 
