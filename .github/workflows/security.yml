@@ -33,16 +33,9 @@ jobs:
       - name: Print versions
         run: node --version && npm --version
       - name: Install dependencies
-        run: npm install --no-fund
-      - name: Generate dependency lockfile for review (temporary)
-        run: |
-          node - <<'NODE'
-          const fs = require('node:fs');
-          const data = fs.readFileSync('package-lock.json').toString('base64');
-          console.log('LOCK_BEGIN');
-          for (const chunk of data.match(/.{1,2000}/g) || []) console.log('LOCK_CHUNK ' + chunk);
-          console.log('LOCK_END');
-          NODE
+        run: npm ci --no-fund
+      - name: Verify locked dependency versions
+        run: npm ls --depth=0
       - name: Audit all dependencies
         run: npm audit --audit-level=moderate
       - name: Build
