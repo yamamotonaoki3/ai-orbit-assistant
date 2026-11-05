@@ -5,4 +5,6 @@ export default defineConfig({
   plugins: [react()],
   // GitHub Pagesの /repo-name/ 配下でもアセットを相対パスで解決する
   base: './',
+  server: { host: '127.0.0.1' },
+  preview: { host: '127.0.0.1' },
 });
